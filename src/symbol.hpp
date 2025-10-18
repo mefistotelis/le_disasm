@@ -34,6 +34,7 @@ protected:
 public:
   Symbol (uint32_t address, Label::Type type = UNKNOWN,
          const std::string &name = "", uint32_t size = 0);
+  Symbol (void);
 
   bool     has_size (void) const;
   size_t   get_size (void) const;

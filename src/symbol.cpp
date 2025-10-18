@@ -26,6 +26,12 @@ Symbol::Symbol (uint32_t address, Label::Type type,
   this->size = size;
 }
 
+Symbol::Symbol (void)
+    : Label()
+{
+  this->size = 0;
+}
+
 bool
 Symbol::has_size (void) const
 {

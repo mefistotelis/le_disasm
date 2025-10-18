@@ -30,7 +30,7 @@ public:
 
   const Symbol *get_symbol(uint32_t address);
 
-  void load_file_map(const char *fileName);
+  void load_file_map(std::string &fileName);
 
 protected:
     std::map<uint32_t, Symbol> map;

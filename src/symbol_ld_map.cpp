@@ -56,12 +56,12 @@ void linearAddressToSymbolAddr(MapFile::MAPSymbol &sym, unsigned long linear_add
     sym.addr = linear_addr - sseg_start_ea;
 }
 
-void SymbolMap::load_file_map(const char *fileName)
+void SymbolMap::load_file_map(std::string &fileName)
 {
     // Open the map file
     char * pMapStart = NULL;
     size_t mapSize = INVALID_MAPFILE_SIZE;
-    MapFile::MAPResult eRet = MapFile::openMAP(fileName, pMapStart, mapSize);
+    MapFile::MAPResult eRet = MapFile::openMAP(fileName.c_str(), pMapStart, mapSize);
     switch (eRet)
     {
         case MapFile::OS_ERROR:
@@ -214,8 +214,12 @@ void SymbolMap::load_file_map(const char *fileName)
             bool didOk;
             // Apply symbols for name
             {
-                didOk = 0;//TODO set_name(la, pname, SN_NOCHECK | SN_NOWARN);
-
+                if (this->map.find(la) == this->map.end() and std::strlen(pname) > 0) {
+                    this->map[la] = Symbol (la, Label::UNKNOWN, pname);
+                    didOk = true;
+                } else {
+                    didOk = false;
+                }
                 std::cerr << std::setfill('0') << std::setw(4) << std::hex << sym.seg
                      << std::setw(8) << la << " - name " << pname << " "
                      << (didOk ? "succeeded" : "failed") << "\n";

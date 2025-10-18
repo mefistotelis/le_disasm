@@ -20,6 +20,7 @@
 #include <iostream>
 #include <memory>
 #include <sstream>
+#include <getopt.h>
 
 #include "analyser.hpp"
 #include "error.hpp"
@@ -30,9 +31,15 @@
 #include "le.hpp"
 #include "le_image.hpp"
 #include "regions.hpp"
+#include "symbol_map.hpp"
 #include "util.hpp"
 
 using std::ios;
+
+struct Options {
+  std::string exefile;
+  std::string mapfile;
+};
 
 static void
 print_separator (void)
@@ -576,21 +583,29 @@ debug_print_regions (Analyser *anal)
 }
 
 void
-main_execute(const char *options_fname)
+main_execute(Options &options)
 {
   std::unique_ptr<LinearExecutable> le;
+  std::unique_ptr<SymbolMap> syms;
   std::unique_ptr<Image> image;
   std::ifstream ifs;
   Analyser anal;
 
-  ifs.open (options_fname, std::ios::binary);
+  syms = std::unique_ptr<SymbolMap>(
+      new SymbolMap
+  );
+
+  if (!options.mapfile.empty())
+    syms->load_file_map(options.mapfile);
+
+  ifs.open (options.exefile, std::ios::binary);
   if(!ifs.is_open())
     {
-      throw Error() << "Error opening file: " << options_fname;
+      throw Error() << "Error opening file: " << options.exefile;
     }
 
   le = std::unique_ptr<LinearExecutable>(
-      LinearExecutable::load (&ifs, options_fname)
+      LinearExecutable::load (&ifs, options.exefile)
   );
 
   image = std::unique_ptr<Image>(
@@ -612,15 +627,47 @@ main_execute(const char *options_fname)
 int
 main (int argc, char **argv)
 {
-  if (argc < 2)
+  static const option longopts[] = {
+      {"exefile", required_argument, NULL, 'e'},
+      {"mapfile", required_argument, NULL, 'm'},
+      {0}};
+  bool show_usage = false;
+  Options options;
+
+  while (1)
     {
-      std::cerr << "Usage: " << argv[0] << " [main.exe]\n";
+      const int opt = getopt_long(argc, argv, "he:m:", longopts, 0);
+
+      if (opt == -1) {
+          break;
+      }
+
+      switch (opt) {
+        case 'e':
+          options.exefile = optarg;
+          break;
+        case 'm':
+          options.mapfile = optarg;
+          break;
+        case 'h':
+        default: /* '?' */
+          show_usage = true;
+          break;
+      }
+    }
+
+  if (options.exefile.empty())
+    show_usage = true;
+
+  if (show_usage)
+    {
+      std::cerr << "Usage: " << argv[0] << " -e <main.exe> [-m <symbols.map>]\n";
       return 1;
     }
 
   try
     {
-      main_execute(argv[1]);
+      main_execute(options);
     }
   catch (const std::exception &e)
     {
