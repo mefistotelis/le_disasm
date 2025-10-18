@@ -193,11 +193,12 @@ Disassembler::set_target_and_type(uint32_t addr, const void *data, Instruction *
       {
         have_target = false;
 
-        /* whatever... */
-        if (inst->string.find ("jmp") != std::string::npos)
-          inst->type = Instruction::JUMP;
-        else
-          inst->type = Instruction::CALL;
+        uint8_t reg_field = (data1 & 0x38) >> 3;
+        if (reg_field == 2 or reg_field == 3) {
+            inst->type = Instruction::CALL;
+        } else if (reg_field == 4 or reg_field == 5) {
+            inst->type = Instruction::JUMP;
+        }
       }
 
   if (have_target
