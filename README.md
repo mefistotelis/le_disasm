@@ -20,14 +20,14 @@ you may want to check both forks.
 Example use on _Syndicate Wars final EU/US release_:
 
 ```
-./le_disasm MAIN.EXE > output.sx
+./le_disasm -e MAIN.EXE > output.sx
 
 ```
 
 Example use with verification and redirection of log messages to a file, on _Fatal Race beta version_:
 
 ```
-./le_disasm FATAL.EXE > output.sx 2> stderr.txt && gcc output.sx
+./le_disasm -e FATAL.EXE > output.sx 2> stderr.txt && gcc output.sx
 
 ```
 
