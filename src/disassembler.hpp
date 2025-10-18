@@ -40,7 +40,7 @@ protected:
                 enum disassembler_style style, const char *fmt, ...);
 # endif
   static void print_address (bfd_vma address, disassemble_info *info);
-  void set_target_and_type(uint32_t addr, const void *data,
+  void set_target_and_type (uint32_t addr, const void *data,
       Instruction *inst);
   
 public:

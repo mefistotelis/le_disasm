@@ -137,7 +137,7 @@ Disassembler::disassemble (uint32_t addr, const void *data, size_t length,
 }
 
 void
-Disassembler::set_target_and_type(uint32_t addr, const void *data, Instruction *inst)
+Disassembler::set_target_and_type (uint32_t addr, const void *data, Instruction *inst)
 {
   uint8_t data0, data1 = 0;
   bool have_target;
@@ -146,7 +146,7 @@ Disassembler::set_target_and_type(uint32_t addr, const void *data, Instruction *
   data0 = ((uint8_t *) data)[0];
 
   /* ignore prefixes for branch prediction (2e/3e) and for operand size (66/67) */
-  if ((data0 == 0x2e) || (data0 == 0x3e) || (data0 == 0x66) || (data0 == 0x67))
+  if ((data0 == 0x2e) or (data0 == 0x3e) or (data0 == 0x66) or (data0 == 0x67))
     {
       if (inst->size > 1)
         data0 = ((uint8_t *) data)[1];
