@@ -101,6 +101,20 @@ Analyser::trace_code (void)
   }
 }
 
+bool
+Analyser::is_valid_acceptable_instruction (Instruction *inst)
+{
+    const char *invalids[] = {"(bad)", "ss", "gs"};
+    std::string text = inst->get_string();
+
+    for (size_t i = 0; i < sizeof(invalids)/sizeof(invalids[0]); ++i) {
+        if (text.compare(invalids[i]) == 0) {
+            return false;
+        }
+    }
+    return true;
+}
+
 void
 Analyser::trace_code_at_address (uint32_t start_addr)
 {
@@ -111,6 +125,7 @@ Analyser::trace_code_at_address (uint32_t start_addr)
   const Image::DataVector *data;
   Instruction inst;
   const void *data_ptr;
+  Region::Type reg_type;
 
   reg = this->get_region_at_address (start_addr);
   if (reg == NULL)
@@ -120,7 +135,8 @@ Analyser::trace_code_at_address (uint32_t start_addr)
       return;
     }
 
-  if (reg->get_type () == Region::CODE) /* already traced */
+  reg_type = reg->get_type ();
+  if (reg_type == Region::CODE || reg_type == Region::DATA) /* already traced */
     return;
 
   end_addr = reg->get_end_address ();
@@ -128,11 +144,19 @@ Analyser::trace_code_at_address (uint32_t start_addr)
   data = obj->get_data ();
 
   addr = start_addr;
+  reg_type = Region::CODE; /* treat the region as code by default */
 
   while (addr < end_addr)
   {
     data_ptr = &data->front () + addr - obj->get_base_address ();
     this->disasm.disassemble (addr, data_ptr, end_addr - addr, &inst);
+
+    if (!is_valid_acceptable_instruction (&inst)) {
+        /* treating the region as code was wrong, make it data */
+        reg_type = Region::DATA;
+        addr += inst.get_size();
+        goto end;
+    }
 
     if (inst.get_target () != 0)
       {
@@ -169,7 +193,7 @@ Analyser::trace_code_at_address (uint32_t start_addr)
 
 end:
   this->insert_region
-    (reg, Region (start_addr, addr - start_addr, Region::CODE));
+    (reg, Region (start_addr, addr - start_addr, reg_type));
 }
 
 Region *

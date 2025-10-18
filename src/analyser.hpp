@@ -58,6 +58,8 @@ protected:
   void  trace_code (void);
   void  trace_code_at_address (uint32_t start_addr);
 
+  bool is_valid_acceptable_instruction (Instruction *inst);
+
   Region * get_previous_region (const Region *reg);
   Region * get_region_at_address (uint32_t address);
   Region * get_region (uint32_t address);
