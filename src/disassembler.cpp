@@ -123,7 +123,7 @@ Disassembler::disassemble (uint32_t addr, const void *data, size_t length,
 
   size = this->print_insn (addr, this->info);
   if (size < 0)
-    throw std::runtime_error ("Failed to disassemble instruction");
+    throw std::runtime_error ("Failed to disassemble, opcodes caused decoder error");
 
   inst->string = lower (strip (context.string.str ()));
   inst->size   = size;
@@ -131,6 +131,11 @@ Disassembler::disassemble (uint32_t addr, const void *data, size_t length,
   inst->target = 0;
 
   if (size == 0)
+    return;
+
+  // If instruction cannot be decoded but didn't caused error, just return it
+  // Upper level functions are expected to re-check and take action
+  if (inst->string.compare("(bad)") == 0)
     return;
 
   set_target_and_type(addr, data, inst);
