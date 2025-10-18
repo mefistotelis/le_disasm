@@ -162,7 +162,7 @@ LinearExecutable::Loader::load_le_header_offset(void)
     return false;
 
   // LE/LX header without MZ stub at start
-  if ((string (id, 2) == "LE") || (string (id, 2) == "LX"))
+  if ((string (id, 2) == "LE") or (string (id, 2) == "LX"))
     {
       this->header_offset = 0;
       return true;
@@ -200,7 +200,7 @@ LinearExecutable::Loader::load_le_header_offset(void)
             is->seekg (0x29000);
             is->read (str, 0x1000);
             pos = std::string(str, str+0x1000).find(signature_str);
-            if (pos != std::string::npos && (pos & 3) == 0)
+            if (pos != std::string::npos and (pos & 3) == 0)
               {
                 this->header_offset = 0x29000 + pos;
                 return true;
@@ -251,7 +251,7 @@ LinearExecutable::Loader::load_header (void)
   if (!is->good ())
     return false;
 
-  if ((string (id, 2) != "LE") && (string (id, 2) != "LX"))
+  if ((string (id, 2) != "LE") and (string (id, 2) != "LX"))
     {
       cerr << "Invalid LE signature at offset 0x" << std::hex << this->header_offset << std::endl;
       return false;
@@ -508,7 +508,7 @@ LinearExecutable::Loader::load_fixup_record_pages (size_t oi)
           if (!is->good ())
             return false;
 
-          if (obj_index < 1 || obj_index > this->le->objects.size ())
+          if (obj_index < 1 or obj_index > this->le->objects.size ())
             return false;
 
           obj_index--;
