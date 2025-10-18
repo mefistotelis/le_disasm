@@ -26,31 +26,31 @@
 //                     <<mHealth
 //                     <<" health points!";
 struct Error : public std::exception {
-	Error() {
-	}
+    Error() {
+    }
 
-	Error(const Error &that) {
-		mWhat += that.mStream.str();
-	}
+    Error(const Error &that) {
+        mWhat += that.mStream.str();
+    }
 
-	virtual ~Error() throw() {};
+    virtual ~Error() throw() {};
 
-	virtual const char *what() const throw () {
-		if (mStream.str().size()) {
-			mWhat += mStream.str();
-			mStream.str("");
-		}
-		return mWhat.c_str();
-	}
+    virtual const char *what() const throw () {
+        if (mStream.str().size()) {
+            mWhat += mStream.str();
+            mStream.str("");
+        }
+        return mWhat.c_str();
+    }
 
-	template<typename T>
-	Error& operator<<(const T& t) {
-		mStream << t;
-		return *this;
-	}
+    template<typename T>
+    Error& operator<<(const T& t) {
+        mStream << t;
+        return *this;
+    }
 private:
-	mutable std::stringstream mStream;
-	mutable std::string mWhat;
+    mutable std::stringstream mStream;
+    mutable std::string mWhat;
 };
 
 #endif // LEDISASM_ERROR_H
