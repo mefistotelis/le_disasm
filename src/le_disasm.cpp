@@ -381,8 +381,16 @@ print_region (const Region *reg, const Image::Object *obj, LinearExecutable *le,
 
                   value = read_le<uint32_t> (obj->get_data_at (addr));
                   dlabel = anal->get_label (value);
-                  assert (dlabel != NULL);
-                  std::cout << "\t\t.long   " << *dlabel << "\n";
+                  if (dlabel != NULL) {
+                      std::cout << "\t\t.long   " << *dlabel << "\n";
+                  } else {
+                      std::cerr << "Warning: Data is an address but destination has no label: 0x"
+                        << std::hex << value << ".\n";
+
+                      std::cout << " /* Warning: address points to a valid object/reloc, "
+                            "destination has no label */" << "\n";
+                      std::cout << "\t\t.long   0x" << std::hex << value << "\n";
+                  }
 
                   addr += 4;
                   len -= 4;
