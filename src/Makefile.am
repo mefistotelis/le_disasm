@@ -19,8 +19,15 @@ le_disasm_SOURCES = \
 	le.cpp \
 	le_image.hpp \
 	le_image.cpp \
+	MAPReader.cpp \
+	MAPReader.hpp \
 	regions.hpp \
 	regions.cpp \
+	symbol.cpp \
+	symbol.hpp \
+	symbol_ld_map.cpp \
+	symbol_map.cpp \
+	symbol_map.hpp \
 	le_disasm.cpp \
 	le_disasm_ver.h \
 	util.hpp \
