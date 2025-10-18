@@ -543,7 +543,7 @@ LinearExecutable::Loader::load_fixup_record_pages (size_t oi)
                           + dst_off_32;
 
 #ifdef DEBUG
-          std::cerr << "0x" << fixup.offset << " -> 0x" << fixup.address << std::endl;
+          std::cerr << "0x" << std::hex << fixup.offset << " -> 0x" << std::hex << fixup.address << std::endl;
 #endif
           this->le->fixups[oi][fixup.offset] = fixup;
           this->le->fixup_addresses.insert (fixup.address);
