@@ -128,7 +128,7 @@ void SymbolMap::load_file_map(std::string &fileName)
                 if (sectnHdr != MapFile::NO_SECTION)
                 {
                     sectnNumber++;
-                    std::cerr << "Section start line: \"" << pLine << "\".\n";
+                    std::cerr << "Section start line: \"" << std::string(pLine, lineLen) << "\".\n";
                     continue;
                 }
             } else
@@ -136,7 +136,7 @@ void SymbolMap::load_file_map(std::string &fileName)
                 sectnHdr = MapFile::recognizeSectionEnd(sectnHdr, pLine, lineLen);
                 if (sectnHdr == MapFile::NO_SECTION)
                 {
-                    std::cerr << "Section end line: \"" << pLine << "\".\n";
+                    std::cerr << "Section end line: \"" << std::string(pLine, lineLen) << "\".\n";
                     continue;
                 }
             }
@@ -169,25 +169,25 @@ void SymbolMap::load_file_map(std::string &fileName)
 
             if (parsed == MapFile::SKIP_LINE)
             {
-                std::cerr << "Skipping line: \"" << pLine << "\".\n";
+                std::cerr << "Skipping line: \"" << std::string(pLine, lineLen) << "\".\n";
                 continue;
             }
             if (parsed == MapFile::FINISHING_LINE)
             {
                 sectnHdr = MapFile::NO_SECTION;
                 // we have parsed to end of value/name symbols table or reached EOF
-                std::cerr << "Parsing finished at line: \"" << pLine << "\".\n";
+                std::cerr << "Parsing finished at line: \"" << std::string(pLine, lineLen) << "\".\n";
                 continue;
             }
             if (parsed == MapFile::INVALID_LINE)
             {
                 invalidSyms++;
-                std::cerr << "Invalid map line: \"" << pLine << "\".\n";
+                std::cerr << "Invalid map line: \"" << std::string(pLine, lineLen) << "\".\n";
                 continue;
             }
             if (parsed == MapFile::COMMENT_LINE)
             {
-                std::cerr << "Comment line: \"" << pLine << "\".\n";
+                std::cerr << "Comment line: \"" << std::string(pLine, lineLen) << "\".\n";
                 if (BADADDR == sym.addr)
                     continue;
             }
