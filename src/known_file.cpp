@@ -73,7 +73,6 @@ KnownFile::pre_anal_fixups_apply(Analyser &anal)
       anal.set_label (Label (0x035644, Label::JUMP));
       anal.set_label (Label (0x13c443, Label::JUMP));
       anal.set_label (Label (0x140096, Label::FUNCTION));
-#     include "known_labels_swars.cpp"
       break;
     case KnownFile::NOT_KNOWN:
       break;
