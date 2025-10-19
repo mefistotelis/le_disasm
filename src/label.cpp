@@ -38,6 +38,17 @@ Label::Label (const Label &other)
   *this = other;
 }
 
+void
+Label::improve_from (const Label &lab)
+{
+  if (this->name.empty ())
+      this->name = lab.get_name ();
+
+  if (this->type == UNKNOWN and
+      lab.get_type () != UNKNOWN)
+    this->type = lab.get_type ();
+}
+
 uint32_t
 Label::get_address (void) const
 {

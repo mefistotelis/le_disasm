@@ -36,6 +36,8 @@ public:
          const std::string &name = "", uint32_t size = 0);
   Symbol (void);
 
+  std::string  get_name (void) const;
+  std::string  get_full_name (void) const;
   bool     has_size (void) const;
   size_t   get_size (void) const;
 };

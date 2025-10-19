@@ -87,6 +87,8 @@ public:
   void insert_region (const Region &reg);
   void set_label (const Label &lab);
   void remove_label (uint32_t addr);
+  Label * improve_label (const Label &lab);
+
   void run (void);
 
   const RegionMap *  get_regions (void) const;

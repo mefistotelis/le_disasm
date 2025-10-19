@@ -47,9 +47,11 @@ public:
   Label (void);
   Label (const Label &other);
 
-  uint32_t  get_address (void) const;
-  Label::Type  get_type (void) const;
-  std::string  get_name (void) const;
+  virtual uint32_t  get_address (void) const;
+  virtual Label::Type  get_type (void) const;
+  virtual std::string  get_name (void) const;
+
+  void improve_from (const Label &lab);
 };
 
 std::ostream &operator<< (std::ostream &os, const Label &label);

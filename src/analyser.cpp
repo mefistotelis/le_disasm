@@ -90,7 +90,9 @@ Analyser::add_labels_to_trace_queue (void)
   for (auto it = this->labels.begin(); it != this->labels.end(); it++)
     {
       Label *label = &it->second;
-      if (label->get_type() == Label::FUNCTION or label->get_type() == Label::JUMP)
+      if (label->get_type() == Label::FUNCTION or
+          label->get_type() == Label::JUMP or
+          label->get_type() == Label::UNKNOWN)
         this->add_code_trace_address (label->get_address());
     }
 }
@@ -522,8 +524,7 @@ Analyser::set_label (const Label &lab)
   label = this->get_label (lab.get_address ());
   if (label != NULL)
     {
-      if (label->get_type () == Label::FUNCTION
-          or !label->get_name ().empty ())
+        this->improve_label(lab);
         return;
     }
 
@@ -534,6 +535,22 @@ void
 Analyser::remove_label (uint32_t addr)
 {
   this->labels.erase (addr);
+}
+
+Label *
+Analyser::improve_label (const Label &lab)
+{
+  Analyser::LabelMap::iterator itr;
+  Label *label;
+
+  itr = this->labels.find (lab.get_address ());
+  if (itr == this->labels.end ())
+    return NULL;
+
+  label = &itr->second;
+  label->improve_from(lab);
+
+  return label;
 }
 
 void

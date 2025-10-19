@@ -14,6 +14,7 @@
  *     the Free Software Foundation; either version 2 of the License, or
  *     (at your option) any later version.
  */
+#include <algorithm>
 #include <iostream>
 
 #include "symbol.hpp"
@@ -31,6 +32,36 @@ Symbol::Symbol (void)
 {
   this->size = 0;
 }
+
+std::string
+Symbol::get_full_name (void) const
+{
+  return this->name;
+}
+
+static bool is_not_allowed_in_label(char c)
+{
+    return !( std::isalnum(c) || c == '_');
+}
+
+std::string
+Symbol::get_name (void) const
+{
+  std::string s = this->name;
+  std::string::size_type pos1,pos2;
+
+  pos1 = s.find('?');
+  pos2 = s.find('$');
+  if (pos1 != std::string::npos &&
+      pos2 != std::string::npos &&
+      pos1 + 1 < pos2)
+    {
+      s = s.substr(pos1 + 1, pos2 - (pos1 + 1));
+    }
+  s.erase(std::remove_if(s.begin(), s.end(), is_not_allowed_in_label), s.end());
+  return s;
+}
+
 
 bool
 Symbol::has_size (void) const
