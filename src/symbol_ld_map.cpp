@@ -215,7 +215,7 @@ void SymbolMap::load_file_map(std::string &fileName)
             // Apply symbols for name
             {
                 if (this->map.find(la) == this->map.end() and std::strlen(pname) > 0) {
-                    this->map[la] = Symbol (la, Label::UNKNOWN, pname);
+                    this->map.emplace( la, Symbol (la, Label::UNKNOWN, pname) );
                     didOk = true;
                 } else {
                     didOk = false;

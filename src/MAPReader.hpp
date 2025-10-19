@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////////////////
-/// @file MAPReader.h
+/// @file MAPReader.hpp
 ///     MAP file analysis and loading routines header.
 /// @par Purpose:
 ///     Library for loading MAP file entries.

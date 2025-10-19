@@ -24,6 +24,7 @@
 #include "label.hpp"
 #include "le.hpp"
 #include "regions.hpp"
+#include "symbol_map.hpp"
 
 using std::ios;
 
@@ -69,6 +70,19 @@ Analyser::add_eip_to_trace_queue (void)
   eip = ohdr->base_address + hdr->eip_offset;
   this->add_code_trace_address (eip);
   this->set_label (Label (eip, Label::FUNCTION, "_start"));
+}
+
+void
+Analyser::add_symbols_to_labels (void)
+{
+  assert(this->symbols != NULL);
+
+  for (auto it = this->symbols->begin(); it != this->symbols->end(); it++)
+    {
+      const Symbol *symbol = &(*it);
+
+      this->set_label (Label (symbol->get_address(), symbol->get_type(), symbol->get_name()));
+    }
 }
 
 void
@@ -445,6 +459,7 @@ Analyser::Analyser (void)
 {
   this->le    = NULL;
   this->image = NULL;
+  this->symbols = NULL;
   this->known_type = KnownFile::NOT_KNOWN;
 }
 
@@ -453,10 +468,11 @@ Analyser::Analyser (const Analyser &other)
   *this = other;
 }
 
-Analyser::Analyser (LinearExecutable *le, Image *img)
+Analyser::Analyser (LinearExecutable *le, Image *img, SymbolMap *syms)
 {
   this->le    = le;
   this->image = img;
+  this->symbols = syms;
   this->add_initial_regions ();
   this->known_type = KnownFile::NOT_KNOWN;
 }
@@ -466,6 +482,7 @@ Analyser::operator= (const Analyser &other)
 {
   this->le     = other.le;
   this->image  = other.image;
+  this->symbols = other.symbols;
   this->disasm = other.disasm;
   this->known_type = other.known_type;
   this->add_initial_regions ();
@@ -523,6 +540,8 @@ Analyser::remove_label (uint32_t addr)
 void
 Analyser::run (void)
 {
+  this->add_symbols_to_labels ();
+  this->add_labels_to_trace_queue ();
   this->add_eip_to_trace_queue ();
   std::cerr << "Tracing code directly accessible from the entry point...\n";
   this->trace_code ();

@@ -612,7 +612,7 @@ main_execute(Options &options)
       create_image (&ifs, le.get())
   );
 
-  anal = Analyser (le.get(), image.get());
+  anal = Analyser (le.get(), image.get(), syms.get());
 
   KnownFile::check(anal, le.get());
   KnownFile::pre_anal_fixups_apply(anal);

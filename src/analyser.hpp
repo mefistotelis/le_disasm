@@ -29,6 +29,7 @@ class LinearExecutable;
 class Image;
 class Label;
 class Region;
+class SymbolMap;
 
 class Analyser
 {
@@ -42,6 +43,7 @@ protected:
   std::deque<uint32_t> code_trace_queue;
   LinearExecutable    *le;
   Image               *image;
+  SymbolMap           *symbols;
   Disassembler         disasm;
   KnownFile::Type      known_type;
 
@@ -52,6 +54,7 @@ protected:
 
   void  add_initial_regions (void);
   void  add_eip_to_trace_queue (void);
+  void  add_symbols_to_labels (void);
   void  add_labels_to_trace_queue (void);
   void  add_code_trace_address (uint32_t addr);
 
@@ -73,7 +76,7 @@ protected:
 public:
   Analyser (void);
   Analyser (const Analyser &other);
-  Analyser (LinearExecutable *le, Image *img);
+  Analyser (LinearExecutable *le, Image *img, SymbolMap *syms);
 
   Analyser &operator= (const Analyser &other);
 
