@@ -59,7 +59,7 @@ Analyser::add_initial_regions (void)
 }
 
 void
-Analyser::add_eip_to_trace_queue (void)
+Analyser::add_eip_to_labels (void)
 {
   const LEOH *ohdr;
   const LEH *hdr;
@@ -68,7 +68,6 @@ Analyser::add_eip_to_trace_queue (void)
   hdr = this->le->get_header ();
   ohdr = this->le->get_object_header (hdr->eip_object_index);
   eip = ohdr->base_address + hdr->eip_offset;
-  this->add_code_trace_address (eip);
   this->set_label (Label (eip, Label::FUNCTION, "_start"));
 }
 
@@ -541,8 +540,8 @@ void
 Analyser::run (void)
 {
   this->add_symbols_to_labels ();
+  this->add_eip_to_labels ();
   this->add_labels_to_trace_queue ();
-  this->add_eip_to_trace_queue ();
   std::cerr << "Tracing code directly accessible from the entry point...\n";
   this->trace_code ();
   std::cerr << "Tracing text relocs for vtables...\n";

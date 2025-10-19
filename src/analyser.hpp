@@ -53,7 +53,7 @@ protected:
   void  add_region (const Region &reg);
 
   void  add_initial_regions (void);
-  void  add_eip_to_trace_queue (void);
+  void  add_eip_to_labels (void);
   void  add_symbols_to_labels (void);
   void  add_labels_to_trace_queue (void);
   void  add_code_trace_address (uint32_t addr);
