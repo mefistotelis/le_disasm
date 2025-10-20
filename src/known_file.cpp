@@ -96,9 +96,44 @@ KnownFile::pre_anal_fixups_apply(Analyser &anal)
       break;
     case KnownFile::KNOWN_SYNDPLUS_FINAL_MAIN:
       ident_str = "Syndicate Plus Final `main.exe`";
+      anal.insert_region (Region (0x014550,  0x018, Region::VTABLE));
+      anal.insert_region (Region (0x014568,  0x0ac, Region::VTABLE));
+      anal.insert_region (Region (0x015C0C,  0x034, Region::VTABLE));
+      anal.insert_region (Region (0x015C40,  0x020, Region::VTABLE));
+      anal.insert_region (Region (0x016508,  0x040, Region::VTABLE));
+      anal.insert_region (Region (0x0175B0,  0x010, Region::VTABLE));
+      anal.insert_region (Region (0x018238,  0x010, Region::VTABLE));
+      anal.insert_region (Region (0x01BE1C,   0x9c, Region::VTABLE));
+      anal.insert_region (Region (0x01D390,  0x0a8, Region::VTABLE));
+      anal.insert_region (Region (0x01D438,  0x014, Region::VTABLE));
       anal.insert_region (Region (0x01FB50,   0x64, Region::VTABLE));
+      anal.insert_region (Region (0x025830,  0x0b4, Region::VTABLE));
       anal.insert_region (Region (0x025920,  0x0ec, Region::VTABLE));
+      anal.insert_region (Region (0x026EB0,  0x034, Region::VTABLE));
+      anal.insert_region (Region (0x029760,  0x030, Region::VTABLE));
+      anal.insert_region (Region (0x02C340,  0x044, Region::VTABLE));
+      anal.insert_region (Region (0x02F980,  0x010, Region::VTABLE));
+      anal.insert_region (Region (0x02FCE0,  0x040, Region::VTABLE));
+      anal.insert_region (Region (0x02FE2C,  0x040, Region::VTABLE));
+      anal.insert_region (Region (0x0312F8,  0x044, Region::VTABLE));
+      anal.insert_region (Region (0x0346C0,  0x020, Region::VTABLE));
+      anal.insert_region (Region (0x034A70,  0x020, Region::VTABLE));
+      anal.insert_region (Region (0x034AB0,  0x020, Region::VTABLE));
+      anal.insert_region (Region (0x0375C0,  0x010, Region::VTABLE));
+      anal.insert_region (Region (0x0375D0,  0x030, Region::VTABLE));
+      anal.insert_region (Region (0x040431,   0x25, Region::DATA)); // CSTRING
+      anal.insert_region (Region (0x0404FB,   0x25, Region::DATA)); // CSTRING
       anal.insert_region (Region (0x04225E,  0x044, Region::VTABLE));
+      anal.insert_region (Region (0x042ADE,   0x08, Region::DATA));
+      anal.insert_region (Region (0x042AE6,   0x08, Region::DATA));
+      anal.insert_region (Region (0x043992,   0x10, Region::VTABLE));
+      anal.insert_region (Region (0x048794,   0x10, Region::VTABLE));
+      anal.insert_region (Region (0x0488BD,   0x10, Region::VTABLE));
+      anal.insert_region (Region (0x0489CC,   0x10, Region::VTABLE));
+      anal.insert_region (Region (0x04A3A7,   0x10, Region::VTABLE));
+      anal.insert_region (Region (0x04FD30,  0x028, Region::DATA));
+      anal.insert_region (Region (0x04FDA3,  0x028, Region::DATA));
+      anal.insert_region (Region (0x04FDE4,  0x010, Region::DATA)); // CSTRING
       break;
     case KnownFile::NOT_KNOWN:
       break;
