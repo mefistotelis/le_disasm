@@ -44,7 +44,27 @@ KnownFile::check(Analyser &anal, LinearExecutable *le)
           le->get_object_header(3)->virtual_size == 0x1b58 &&
           le->get_object_header(3)->base_address == 0x1f0000)
         {
-          anal.known_type = KnownFile::KNOWN_SWARS_FINAL_MAIN;
+          anal.known_type = KnownFile::KNOWN_SYNDWARS_FINAL_MAIN;
+          return;
+        }
+    }
+  if (header->eip_offset == 0x2d85c &&
+      header->esp_offset == 0x13e60 &&
+      header->last_page_size == 0xe39 &&
+      header->fixup_section_size == 0x12ee9 &&
+      header->loader_section_size == 0x130f6 &&
+      header->object_count == 4)
+    {
+      if (le->get_object_header(0)->virtual_size == 0x3fdf4 &&
+          le->get_object_header(0)->base_address == 0x10000 &&
+          le->get_object_header(1)->virtual_size == 0x13e60 &&
+          le->get_object_header(1)->base_address == 0x50000 &&
+          le->get_object_header(2)->virtual_size == 0xc00 &&
+          le->get_object_header(2)->base_address == 0x70000 &&
+          le->get_object_header(3)->virtual_size == 0x1c632 &&
+          le->get_object_header(3)->base_address == 0x80000)
+        {
+          anal.known_type = KnownFile::KNOWN_SYNDPLUS_FINAL_MAIN;
           return;
         }
     }
@@ -57,7 +77,7 @@ KnownFile::pre_anal_fixups_apply(Analyser &anal)
 
   switch (anal.known_type)
     {
-    case KnownFile::KNOWN_SWARS_FINAL_MAIN:
+    case KnownFile::KNOWN_SYNDWARS_FINAL_MAIN:
       ident_str = "Syndicate Wars Final `main.exe`";
       anal.insert_region (Region (0x0e581e,   0x76, Region::DATA));
       anal.insert_region (Region (0x0e5af1,    0xf, Region::DATA));
@@ -74,6 +94,12 @@ KnownFile::pre_anal_fixups_apply(Analyser &anal)
       anal.set_label (Label (0x13c443, Label::JUMP));
       anal.set_label (Label (0x140096, Label::FUNCTION));
       break;
+    case KnownFile::KNOWN_SYNDPLUS_FINAL_MAIN:
+      ident_str = "Syndicate Plus Final `main.exe`";
+      anal.insert_region (Region (0x01FB50,   0x64, Region::VTABLE));
+      anal.insert_region (Region (0x025920,  0x0ec, Region::DATA)); // VTABLE but crashes
+      anal.insert_region (Region (0x04225E,  0x044, Region::VTABLE));
+      break;
     case KnownFile::NOT_KNOWN:
       break;
     }
@@ -86,7 +112,7 @@ KnownFile::post_anal_fixups_apply(Analyser &anal)
 {
   switch (anal.known_type)
     {
-    case KnownFile::KNOWN_SWARS_FINAL_MAIN:
+    case KnownFile::KNOWN_SYNDWARS_FINAL_MAIN:
       anal.remove_label (0x10000);
       break;
     case KnownFile::NOT_KNOWN:

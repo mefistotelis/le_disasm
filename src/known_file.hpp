@@ -26,7 +26,8 @@ public:
   enum Type
   {
     NOT_KNOWN,
-    KNOWN_SWARS_FINAL_MAIN
+    KNOWN_SYNDWARS_FINAL_MAIN,
+    KNOWN_SYNDPLUS_FINAL_MAIN,
   };
 
   static void check(Analyser &anal, LinearExecutable *le);
