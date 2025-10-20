@@ -151,7 +151,7 @@ Analyser::trace_code_at_address (uint32_t start_addr)
     }
 
   reg_type = reg->get_type ();
-  if (reg_type == Region::CODE || reg_type == Region::DATA) /* already traced */
+  if (reg_type != Region::UNKNOWN) /* already traced */
     return;
 
   end_addr = reg->get_end_address ();
