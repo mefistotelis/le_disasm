@@ -97,7 +97,7 @@ KnownFile::pre_anal_fixups_apply(Analyser &anal)
     case KnownFile::KNOWN_SYNDPLUS_FINAL_MAIN:
       ident_str = "Syndicate Plus Final `main.exe`";
       anal.insert_region (Region (0x01FB50,   0x64, Region::VTABLE));
-      anal.insert_region (Region (0x025920,  0x0ec, Region::DATA)); // VTABLE but crashes
+      anal.insert_region (Region (0x025920,  0x0ec, Region::VTABLE));
       anal.insert_region (Region (0x04225E,  0x044, Region::VTABLE));
       break;
     case KnownFile::NOT_KNOWN:

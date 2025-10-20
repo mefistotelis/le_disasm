@@ -307,11 +307,13 @@ print_region (const Region *reg, const Image::Object *obj, LinearExecutable *le,
   Disassembler disasm;
   Instruction inst;
   LEFM::const_iterator itr;
+  bool warn_once;
 
 #ifdef DEBUG
   std::cerr << "Region: " << *reg << std::endl;
 #endif
 
+  warn_once = true;
   obj = img->get_object_at_address (reg->get_address ());
   addr = reg->get_address ();
 
@@ -391,8 +393,11 @@ print_region (const Region *reg, const Image::Object *obj, LinearExecutable *le,
                   if (dlabel != NULL) {
                       std::cout << "\t\t.long   " << *dlabel << "\n";
                   } else {
-                      std::cerr << "Warning: Data is an address but destination has no label: 0x"
-                        << std::hex << value << ".\n";
+                      if (warn_once) {
+                          warn_once = false;
+                          std::cerr << "Warning: Data is an address but destination has no label: 0x"
+                            << std::hex << value << ".\n";
+                      }
 
                       std::cout << " /* Warning: address points to a valid object/reloc, "
                             "destination has no label */" << "\n";
@@ -474,10 +479,21 @@ print_region (const Region *reg, const Image::Object *obj, LinearExecutable *le,
 
       /* TODO: limit by relocs */
 
-      print_label (anal->get_label (addr));
+      next_label = anal->get_label (addr);
+      if (next_label != NULL)
+        {
+          print_label (next_label);
+        }
+      else
+        {
+         std::cerr << "Warning: VTABLE has no label: 0x"
+             << std::hex << addr << ".\n";
+
+         std::cout << " /* Warning: Start of VTABLE, but has no label */" << "\n";
+       }
       next_label = anal->get_next_label (addr);
 
-      while (addr < reg->get_end_address ())
+      for (; addr < reg->get_end_address (); addr += 4)
         {
           if (next_label != NULL and addr == next_label->get_address ())
             {
@@ -487,16 +503,25 @@ print_region (const Region *reg, const Image::Object *obj, LinearExecutable *le,
 
           func_addr = read_le<uint32_t> (obj->get_data_at (addr));
 
-          if (func_addr != 0)
+          if (func_addr == 0)
             {
-              label = anal->get_label (func_addr);
-              assert (label != NULL);
-              std::cout << "\t\t.long   " << *label << "\n";
+              std::cout << "\t\t.long   0\n";
+              continue;
             }
-          else
-            std::cout << "\t\t.long   0\n";
 
-          addr += 4;
+          label = anal->get_label (func_addr);
+
+          if (label == NULL)
+            {
+              if (warn_once)
+                {
+                  warn_once = false;
+                  std::cerr << "Warning: Some addresses in VTABLE have no label, first: 0x"
+                      << std::hex << func_addr << ".\n";
+                }
+              continue;
+            }
+          std::cout << "\t\t.long   " << *label << "\n";
         }
       break;
 
