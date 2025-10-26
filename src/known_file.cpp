@@ -131,6 +131,7 @@ KnownFile::pre_anal_fixups_apply(Analyser &anal)
       anal.insert_region (Region (0x0488BD,   0x10, Region::VTABLE));
       anal.insert_region (Region (0x0489CC,   0x10, Region::VTABLE));
       anal.insert_region (Region (0x04A3A7,   0x10, Region::VTABLE));
+      anal.insert_region (Region (0x04FC81,   0x40, Region::DATA));
       anal.insert_region (Region (0x04FD30,  0x028, Region::DATA));
       anal.insert_region (Region (0x04FDA3,  0x028, Region::DATA));
       anal.insert_region (Region (0x04FDE4,  0x010, Region::DATA)); // CSTRING
