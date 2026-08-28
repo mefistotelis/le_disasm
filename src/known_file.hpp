@@ -26,6 +26,7 @@ public:
   enum Type
   {
     NOT_KNOWN,
+    KNOWN_GENEWARS_NOV96_GW,
     KNOWN_SYNDWARS_FINAL_MAIN,
     KNOWN_SYNDPLUS_FINAL_MAIN,
   };

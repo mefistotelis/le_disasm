@@ -28,6 +28,26 @@ KnownFile::check(Analyser &anal, LinearExecutable *le)
 
   anal.known_type = KnownFile::NOT_KNOWN;
 
+  if (header->eip_offset == 0x9f96c &&
+      header->esp_offset == 0xa8c50 &&
+      header->last_page_size == 0x34a &&
+      header->fixup_section_size == 0x351ad &&
+      header->loader_section_size == 0x355e6 &&
+      header->object_count == 4)
+    {
+      if (le->get_object_header(0)->virtual_size == 0xde930 &&
+          le->get_object_header(0)->base_address == 0x10000 &&
+          le->get_object_header(1)->virtual_size == 0x96 &&
+          le->get_object_header(1)->base_address == 0xf0000 &&
+          le->get_object_header(2)->virtual_size == 0xa8c50 &&
+          le->get_object_header(2)->base_address == 0x100000 &&
+          le->get_object_header(3)->virtual_size == 0x1350 &&
+          le->get_object_header(3)->base_address == 0x1b0000)
+        {
+          anal.known_type = KnownFile::KNOWN_GENEWARS_NOV96_GW;
+          return;
+        }
+    }
   if (header->eip_offset == 0xd581c &&
       header->esp_offset == 0x9ffe0 &&
       header->last_page_size == 0x34a &&
@@ -77,6 +97,9 @@ KnownFile::pre_anal_fixups_apply(Analyser &anal)
 
   switch (anal.known_type)
     {
+    case KnownFile::KNOWN_GENEWARS_NOV96_GW:
+      ident_str = "Genewars Nov'96 patch `gw.exe`";
+      break;
     case KnownFile::KNOWN_SYNDWARS_FINAL_MAIN:
       ident_str = "Syndicate Wars Final `main.exe`";
       anal.insert_region (Region (0x0e581e,   0x76, Region::DATA));
